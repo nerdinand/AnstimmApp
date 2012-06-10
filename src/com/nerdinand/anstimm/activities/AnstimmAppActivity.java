@@ -41,7 +41,7 @@ public class AnstimmAppActivity extends Activity implements OnItemClickListener 
 		songListView.setFastScrollEnabled(true);
 		songListView.setOnItemClickListener(this);
 		
-		Cursor songCursor = SongDB.getInstance(this).getSongs();
+		Cursor songCursor = getSongCursor();
 		
 		cursorAdapter = new MyCursorAdapter(
                         getApplicationContext(),
@@ -52,6 +52,10 @@ public class AnstimmAppActivity extends Activity implements OnItemClickListener 
 		
 		songListView.setAdapter(cursorAdapter); 
 		songListView.setFastScrollEnabled(true);
+	}
+
+	private Cursor getSongCursor() {
+		return SongDB.getInstance(this).getSongs();
 	}
 
 	@Override
@@ -66,14 +70,7 @@ public class AnstimmAppActivity extends Activity implements OnItemClickListener 
 	}
 
 	private void reloadSongList() {
-		cursorAdapter.getCursor().requery();
-		
-//		try {
-//
-//		} catch (IOException e) {
-//			Toast.makeText(this, this.getString(R.string.parsing_error),
-//					Toast.LENGTH_LONG);
-//		}
+		cursorAdapter.changeCursor(getSongCursor());
 	}
 
 	@Override
