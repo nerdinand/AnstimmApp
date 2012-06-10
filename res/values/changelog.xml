@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="versions">
+        <item>1.1.2</item>
+        <item>1.1.1</item>
+        <item>1.1.0</item>
+        <item>1.0</item>
+    </string-array>
+    
+    <string-array name="changes">
+        <item>Bugfix release: Have volume control in song detail activity too, disable voice buttons while playing tones, play tones longer for individual voices.</item>
+        <item>Bugfix release: Call release() on MediaPlayer instances after using them.</item>
+        <item>Feature release: New song activity that shows details for the song when tapping a song list entry and lets the user push buttons to play back certain voices\' tones again.</item>
+        <item>Inital release: Supports downloading a song csv file, showing a list of songs and playing the intonation for each of them.</item>
+    </string-array>
+</resources>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">AnstimmApp</string>
+    
+	<string name="update_songs">Lieder updaten</string>
+	<string name="information">Information</string>
+	
+	<string name="playing">abspielen…</string>
+	<string name="downloading">herunterladen…</string>
+	
+	<string name="parsing_error">Fehler beim Laden der Lieder. Bitte Lieder im Menü updaten!</string>
+	<string name="downloading_error">Fehler beim Herunterladen der Lieder.</string>
+	
+	<string name="soprano1">Sopran 1</string>
+	<string name="soprano2">Sopran 2</string>
+	<string name="alto1">Alt 1</string>
+	<string name="alto2">Alt 2</string>
+	
+	<string name="tenor1">Tenor 1</string>
+	<string name="tenor2">Tenor 2</string>
+	<string name="bass1">Bass 1</string>
+	<string name="bass2">Bass 2</string>
+	
+	<string name="solo1">Solo 1</string>
+	<string name="solo2">Solo 2</string>
+
+	<string name="ok">OK</string>	
+</resources>

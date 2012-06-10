@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <TextView
+        android:id="@+id/titleText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:text="titleText"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <TextView
+        android:id="@+id/composerText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/titleText"
+        android:text="composerText"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+
+    <TextView
+        android:id="@+id/arrangementText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/composerText"
+        android:text="arrangementText"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+
+    <com.nerdinand.anstimm.activities.VoiceButton
+        android:id="@+id/soprano1Button"
+        android:layout_marginTop="10dip"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/arrangementText"
+        android:text="@string/soprano1" />
+
+    <com.nerdinand.anstimm.activities.VoiceButton
+        android:id="@+id/soprano2Button"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/soprano1Button"
+        android:layout_alignBottom="@+id/soprano1Button"
+        android:layout_toRightOf="@+id/soprano1Button"
+        android:text="@string/soprano2" />
+
+    <com.nerdinand.anstimm.activities.VoiceButton
+        android:id="@+id/alto1Button"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/soprano2Button"
+        android:layout_alignBottom="@+id/soprano2Button"
+        android:layout_toRightOf="@+id/soprano2Button"
+        android:text="@string/alto1" />
+
+    <com.nerdinand.anstimm.activities.VoiceButton
+        android:id="@+id/alto2Button"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/alto1Button"
+        android:layout_alignBottom="@+id/alto1Button"
+        android:layout_toRightOf="@+id/alto1Button"
+        android:text="@string/alto2" />
+
+    <com.nerdinand.anstimm.activities.VoiceButton
+        android:id="@+id/tenor1Button"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/soprano1Button"
+        android:text="@string/tenor1" />
+
+    <com.nerdinand.anstimm.activities.VoiceButton
+        android:id="@+id/tenor2Button"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/soprano1Button"
+        android:layout_toRightOf="@+id/tenor1Button"
+        android:text="@string/tenor2" />
+
+    <com.nerdinand.anstimm.activities.VoiceButton
+        android:id="@+id/bass1Button"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/tenor2Button"
+        android:layout_alignBottom="@+id/tenor2Button"
+        android:layout_toRightOf="@+id/tenor2Button"
+        android:text="@string/bass1" />
+
+    <com.nerdinand.anstimm.activities.VoiceButton
+        android:id="@+id/bass2Button"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/bass1Button"
+        android:layout_alignBottom="@+id/bass1Button"
+        android:layout_toRightOf="@+id/bass1Button"
+        android:text="@string/bass2" />
+
+    <com.nerdinand.anstimm.activities.VoiceButton
+        android:id="@+id/solo1Button"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/tenor1Button"
+        android:text="@string/solo1" />
+
+    <com.nerdinand.anstimm.activities.VoiceButton
+        android:id="@+id/solo2Button"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/solo1Button"
+        android:layout_alignBottom="@+id/solo1Button"
+        android:layout_toRightOf="@+id/solo1Button"
+        android:text="@string/solo2" />
+
+</RelativeLayout>
