@@ -11,7 +11,9 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.nerdinand.anstimm.R;
+import com.nerdinand.anstimm.db.SongDB;
 import com.nerdinand.anstimm.entities.Song;
+import com.nerdinand.anstimm.entities.SongDBConverter;
 import com.nerdinand.anstimm.entities.Song.Voice;
 import com.nerdinand.anstimm.worker.MidiPlayer;
 
@@ -39,6 +41,7 @@ public class SongActivity extends Activity implements OnClickListener,
 	private VoiceButton solo2Button;
 
 	private VoiceButton[] voiceButtons;
+	private Song selectedSong;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -117,8 +120,9 @@ public class SongActivity extends Activity implements OnClickListener,
 	protected void onStart() {
 		super.onStart();
 
-		Song selectedSong = AnstimmAppActivity.getSelectedSong();
-
+		long songId = this.getIntent().getExtras().getLong(
+						SongDB.SongTable.TABLE + "." + SongDB.SongTable.COLUMN_ID);
+		selectedSong = SongDBConverter.getSongFromCursor(SongDB.getInstance(this).getSong(songId));
 		displaySong(selectedSong);
 		play(selectedSong);
 	}
@@ -138,11 +142,10 @@ public class SongActivity extends Activity implements OnClickListener,
 	public void onClick(View view) {
 		if (view instanceof VoiceButton) {
 			setVoiceButtonsEnabled(false);
-			
+
 			VoiceButton voiceButton = (VoiceButton) view;
 
 			Voice voice = voiceButton.getVoice();
-			Song selectedSong = AnstimmAppActivity.getSelectedSong();
 			String tone = selectedSong.getTone(voice);
 			midiPlayer.playMidi(8, new String[] { tone });
 		}
@@ -152,8 +155,8 @@ public class SongActivity extends Activity implements OnClickListener,
 	public void onCompletion(MediaPlayer mp) {
 		setVoiceButtonsEnabled(true);
 	}
-	
-	private void setVoiceButtonsEnabled(boolean enabled){
+
+	private void setVoiceButtonsEnabled(boolean enabled) {
 		for (VoiceButton voiceButton : voiceButtons) {
 			voiceButton.setEnabled(enabled);
 		}

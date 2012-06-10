@@ -41,15 +41,6 @@
         android:text="Incorporates code from OpenCSV, released under the Apache 2.0 licence (opencsv.sourceforge.net)"
         android:textAppearance="?android:attr/textAppearanceSmall" />
 
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_marginTop="88dp"
-        android:text="Incorporates code from OpenCSV, released under the Apache 2.0 licence (opencsv.sourceforge.net)"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
-
     <ListView
         android:id="@+id/changeLogListView"
         android:layout_width="match_parent"

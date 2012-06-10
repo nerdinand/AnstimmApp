@@ -16,21 +16,10 @@
         android:id="@+id/composer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/title"
         android:gravity="right"
         android:text="composer"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
-
-    <TextView
-        android:id="@+id/voices"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_below="@+id/composer"
-        android:layout_marginTop="5dp"
-        android:gravity="right"
-        android:text="voices"
         android:textAppearance="?android:attr/textAppearanceSmall" />
 
 </RelativeLayout>

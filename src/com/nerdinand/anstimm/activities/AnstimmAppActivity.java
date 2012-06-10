@@ -1,43 +1,32 @@
 package com.nerdinand.anstimm.activities;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.media.AudioManager;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ArrayAdapter;
+import android.widget.AlphabetIndexer;
 import android.widget.ListView;
-import android.widget.TextView;
+import android.widget.SectionIndexer;
+import android.widget.SimpleCursorAdapter;
 import android.widget.Toast;
 
 import com.nerdinand.anstimm.R;
-import com.nerdinand.anstimm.entities.Song;
-import com.nerdinand.anstimm.entities.SongComparator;
-import com.nerdinand.anstimm.worker.SongDownloader;
-import com.nerdinand.anstimm.worker.SongFileParser;
+import com.nerdinand.anstimm.db.SongDB;
+import com.nerdinand.anstimm.db.SongDBUpdater;
+import com.nerdinand.anstimm.db.SongDBUpdaterException;
 
 public class AnstimmAppActivity extends Activity implements OnItemClickListener {
-	private static Song selectedSong;
-	ArrayList<Song> songList = new ArrayList<Song>();
-	File songFile;
-
-	private SongFileParser songFileParser;
-
-	private SongDownloader songDownloader;
 	private ListView songListView;
-	private SongAdapter songAdapter;
+	private SongDBUpdater songDBUpdater;
+	private MyCursorAdapter cursorAdapter;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -45,21 +34,31 @@ public class AnstimmAppActivity extends Activity implements OnItemClickListener 
 		setContentView(R.layout.main_layout);
 
 		setVolumeControlStream(AudioManager.STREAM_MUSIC);
-		songFile = this.getFileStreamPath(SongDownloader.CSV_FILE_NAME);
 
-		songFileParser = new SongFileParser(songFile);
-		songDownloader = new SongDownloader(this);
+		songDBUpdater = new SongDBUpdater(this);
 
 		songListView = (ListView) this.findViewById(R.id.songListView);
 		songListView.setFastScrollEnabled(true);
 		songListView.setOnItemClickListener(this);
+		
+		Cursor songCursor = SongDB.getInstance(this).getSongs();
+		
+		cursorAdapter = new MyCursorAdapter(
+                        getApplicationContext(),
+                        R.layout.song_row,
+                        songCursor,
+                        new String[]{SongDB.SongTable.COLUMN_TITLE, SongDB.SongTable.COLUMN_COMPOSER},//from
+                        new int[]{R.id.title, R.id.composer});//to)
+		
+		songListView.setAdapter(cursorAdapter); 
+		songListView.setFastScrollEnabled(true);
 	}
 
 	@Override
 	protected void onStart() {
 		super.onStart();
 
-		if (!songFile.exists()) {
+		if (cursorAdapter.getCount() == 0){
 			updateSongs();
 		}
 
@@ -67,16 +66,14 @@ public class AnstimmAppActivity extends Activity implements OnItemClickListener 
 	}
 
 	private void reloadSongList() {
-		try {
-			songList = songFileParser.parse();
-			songAdapter = new SongAdapter(this, R.layout.song_row, songList);
-			songAdapter.sort(new SongComparator());
-			songListView.setAdapter(songAdapter);
-
-		} catch (IOException e) {
-			Toast.makeText(this, this.getString(R.string.parsing_error),
-					Toast.LENGTH_LONG);
-		}
+		cursorAdapter.getCursor().requery();
+		
+//		try {
+//
+//		} catch (IOException e) {
+//			Toast.makeText(this, this.getString(R.string.parsing_error),
+//					Toast.LENGTH_LONG);
+//		}
 	}
 
 	@Override
@@ -109,10 +106,11 @@ public class AnstimmAppActivity extends Activity implements OnItemClickListener 
 
 	private void updateSongs() {
 		try {
-			songDownloader.downloadSong();
-		} catch (Exception e) {
+			songDBUpdater.update();
+		} catch (SongDBUpdaterException e) {
 			Toast.makeText(this, this.getString(R.string.downloading_error),
 					Toast.LENGTH_LONG);
+			e.printStackTrace();
 		}
 	}
 
@@ -120,59 +118,53 @@ public class AnstimmAppActivity extends Activity implements OnItemClickListener 
 	public void onItemClick(AdapterView<?> parent, View view, int position,
 			long id) {
 		if (parent == songListView) {
-			Song song = songList.get(position);
-			startSongActivity(song);
+			long songId = cursorAdapter.getItemId(position);
+			startSongActivity(songId);
 		}
 	}
 
-	private void startSongActivity(Song song) {
-		AnstimmAppActivity.setSelectedSong(song);
-		
+	private void startSongActivity(long songId) {
 		Intent intent = new Intent(this, SongActivity.class);
+		intent.putExtra(SongDB.SongTable.TABLE+"."+SongDB.SongTable.COLUMN_ID, songId);
 		this.startActivity(intent);
 	}
 
-	private static void setSelectedSong(Song song) {
-		AnstimmAppActivity.selectedSong=song;
-	}
-	
-	public static Song getSelectedSong() {
-		return selectedSong;
-	}
+	class MyCursorAdapter extends SimpleCursorAdapter implements SectionIndexer {
 
-	private class SongAdapter extends ArrayAdapter<Song> {
+		AlphabetIndexer alphaIndexer;
 
-		private ArrayList<Song> items;
+		public MyCursorAdapter(Context context, int layout, Cursor cursor,
+				String[] from, int[] to) {
 
-		public SongAdapter(Context context, int textViewResourceId,
-				ArrayList<Song> items) {
-			super(context, textViewResourceId, items);
-			this.items = items;
+			super(context, layout, cursor, from, to);
+			alphaIndexer = new AlphabetIndexer(cursor,
+					cursor.getColumnIndex(SongDB.SongTable.COLUMN_TITLE),
+					" ABCDEFGHIJKLMNOPQRSTUVWXYZ");
+
+			// you have just to instanciate the indexer class like this
+
+			// cursor,index of the sorted colum,a string representing the
+			// alphabeth (pay attention on the blank char at the beginning of
+			// the sequence)
+
 		}
 
 		@Override
-		public View getView(int position, View convertView, ViewGroup parent) {
-
-			if (convertView == null) {
-				LayoutInflater vi = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-				convertView = vi.inflate(R.layout.song_row, null);
-			}
-
-			Song song = items.get(position);
-			if (song != null) {
-				TextView titleView = (TextView) convertView
-						.findViewById(R.id.title);
-				TextView composerView = (TextView) convertView
-						.findViewById(R.id.composer);
-				TextView voicesView = (TextView) convertView
-						.findViewById(R.id.voices);
-
-				titleView.setText(song.getTitle());
-				composerView.setText(song.getComposer());
-				voicesView.setText(song.getVoicesString());
-			}
-
-			return convertView;
+		public int getPositionForSection(int section) {
+			return alphaIndexer.getPositionForSection(section); // use the
+																// indexer
 		}
+
+		@Override
+		public int getSectionForPosition(int position) {
+			return alphaIndexer.getSectionForPosition(position); // use the
+																	// indexer
+		}
+
+		@Override
+		public Object[] getSections() {
+			return alphaIndexer.getSections(); // use the indexer
+		}
+
 	}
 }

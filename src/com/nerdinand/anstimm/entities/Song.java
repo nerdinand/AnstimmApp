@@ -3,37 +3,32 @@ package com.nerdinand.anstimm.entities;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import com.nerdinand.anstimm.Util;
-
 public class Song {
-	public enum Voice{
+	public enum Voice {
 		S1, S2, A1, A2, T1, T2, B1, B2, So1, So2
 	}
-	
+
 	private String timestamp;
 	private String title;
 	private String composer;
 	private String arrangement;
 
-	HashMap<Voice, String> voiceToneMap=new HashMap<Voice, String>();
+	private String status;
+	private String editor;
+	private String comment;
 
-	static Voice[] intonationOrder=new Voice[]{
-		Voice.B2, 
-		Voice.B1, 
-		
-		Voice.T2, 
-		Voice.T1, 
-		
-		Voice.A2, 
-		Voice.A1, 
-		
-		Voice.S2, 
-		Voice.S1, 
-		
-		Voice.So2, 
-		Voice.So1
-	};
-	
+	HashMap<Voice, String> voiceToneMap = new HashMap<Voice, String>();
+
+	static Voice[] intonationOrder = new Voice[] { Voice.B2, Voice.B1,
+
+	Voice.T2, Voice.T1,
+
+	Voice.A2, Voice.A1,
+
+	Voice.S2, Voice.S1,
+
+	Voice.So2, Voice.So1 };
+
 	private String key;
 
 	private String genre;
@@ -56,30 +51,34 @@ public class Song {
 		} else if (key.equals("Arrangement")) {
 			setArrangement(value);
 		} else if (key.equals("Sopran 1")) {
-			voiceToneMap.put(Voice.S1, value);
+			setVoice(Voice.S1, value);
 		} else if (key.equals("Sopran 2")) {
-			voiceToneMap.put(Voice.S2, value);
+			setVoice(Voice.S2, value);
 		} else if (key.equals("Alt 1")) {
-			voiceToneMap.put(Voice.A1, value);
+			setVoice(Voice.A1, value);
 		} else if (key.equals("Alt 2")) {
-			voiceToneMap.put(Voice.A2, value);
+			setVoice(Voice.A2, value);
 		} else if (key.equals("Tenor 1")) {
-			voiceToneMap.put(Voice.T1, value);
+			setVoice(Voice.T1, value);
 		} else if (key.equals("Tenor 2")) {
-			voiceToneMap.put(Voice.T2, value);
+			setVoice(Voice.T2, value);
 		} else if (key.equals("Bass 1")) {
-			voiceToneMap.put(Voice.B1, value);
+			setVoice(Voice.B1, value);
 		} else if (key.equals("Bass 2")) {
-			voiceToneMap.put(Voice.B2, value);
+			setVoice(Voice.B2, value);
 		} else if (key.equals("Solo 1")) {
-			voiceToneMap.put(Voice.So1, value);
+			setVoice(Voice.So1, value);
 		} else if (key.equals("Solo 2")) {
-			voiceToneMap.put(Voice.So2, value);
+			setVoice(Voice.So2, value);
 		} else if (key.equals("Tonart")) {
 			setKey(value);
 		} else if (key.equals("Genre")) {
 			setGenre(value);
 		}
+	}
+
+	public void setVoice(Voice voice, String value) {
+		voiceToneMap.put(voice, value);
 	}
 
 	public String getTitle() {
@@ -104,46 +103,6 @@ public class Song {
 
 	public void setArrangement(String arrangement) {
 		this.arrangement = arrangement;
-	}
-
-	public String getSoprano1() {
-		return voiceToneMap.get(Voice.S1);
-	}
-
-	public String getSoprano2() {
-		return voiceToneMap.get(Voice.S2);
-	}
-
-	public String getAlto1() {
-		return voiceToneMap.get(Voice.A1);
-	}
-
-	public String getAlto2() {
-		return voiceToneMap.get(Voice.A2);
-	}
-
-	public String getTenor1() {
-		return voiceToneMap.get(Voice.T1);
-	}
-
-	public String getTenor2() {
-		return voiceToneMap.get(Voice.T2);
-	}
-
-	public String getBass1() {
-		return voiceToneMap.get(Voice.B1);
-	}
-
-	public String getBass2() {
-		return voiceToneMap.get(Voice.B2);
-	}
-
-	public String getSolo1() {
-		return voiceToneMap.get(Voice.So1);
-	}
-
-	public String getSolo2() {
-		return voiceToneMap.get(Voice.So2);
 	}
 
 	public String getKey() {
@@ -192,48 +151,38 @@ public class Song {
 		this.genre = genre;
 	}
 
-	public String getVoicesString() {
-		return Util.arrayToString(getVoices(), "");
+	public boolean hasVoice(Voice voice) {
+		return voiceToneMap.containsKey(voice)
+				&& voiceToneMap.get(voice) != null
+				&& !voiceToneMap.get(voice).isEmpty();
 	}
 
-	public boolean hasVoice(Voice voice){
-		return voiceToneMap.containsKey(voice);
+	public String getStatus() {
+		return status;
 	}
-	
-	public String[] getVoices() {
-		ArrayList<String> voices = new ArrayList<String>();
 
-		if (getSoprano1() != null) {
-			voices.add("S");
-		}
-		if (getSoprano2() != null) {
-			voices.add("1S2");
-		}
-		if (getAlto1() != null) {
-			voices.add("A");
-		}
-		if (getAlto2() != null) {
-			voices.add("1A2");
-		}
-		if (getTenor1() != null) {
-			voices.add("T");
-		}
-		if (getTenor2() != null) {
-			voices.add("1T2");
-		}
-		if (getBass1() != null) {
-			voices.add("B");
-		}
-		if (getBass2() != null) {
-			voices.add("1B2");
-		}
-		if (getSolo1() != null) {
-			voices.add("Solo");
-		}
-		if (getSolo2() != null) {
-			voices.add(" 1, 2");
-		}
-
-		return voices.toArray(new String[] {});
+	public void setStatus(String status) {
+		this.status = status;
 	}
+
+	public String getEditor() {
+		return editor;
+	}
+
+	public void setEditor(String editor) {
+		this.editor = editor;
+	}
+
+	public String getComment() {
+		return comment;
+	}
+
+	public void setComment(String comment) {
+		this.comment = comment;
+	}
+
+	public String getVoice(Voice voice) {
+		return voiceToneMap.get(voice);
+	}
+
 }
