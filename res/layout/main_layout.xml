@@ -4,6 +4,16 @@
     android:layout_height="fill_parent"
     android:orientation="vertical" >
 
+    <EditText
+        android:id="@+id/filterEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="text" >
+
+        <requestFocus />
+    </EditText>
+
     <ListView
         android:id="@+id/songListView"
         android:layout_width="match_parent"

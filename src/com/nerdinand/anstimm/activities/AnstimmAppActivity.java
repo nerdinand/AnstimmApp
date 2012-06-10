@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.media.AudioManager;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -13,6 +15,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AlphabetIndexer;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SectionIndexer;
 import android.widget.SimpleCursorAdapter;
@@ -23,10 +26,11 @@ import com.nerdinand.anstimm.db.SongDB;
 import com.nerdinand.anstimm.db.SongDBUpdater;
 import com.nerdinand.anstimm.db.SongDBUpdaterException;
 
-public class AnstimmAppActivity extends Activity implements OnItemClickListener {
+public class AnstimmAppActivity extends Activity implements OnItemClickListener, TextWatcher {
 	private ListView songListView;
 	private SongDBUpdater songDBUpdater;
 	private MyCursorAdapter cursorAdapter;
+	private EditText filterEditText;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -40,18 +44,20 @@ public class AnstimmAppActivity extends Activity implements OnItemClickListener 
 		songListView = (ListView) this.findViewById(R.id.songListView);
 		songListView.setFastScrollEnabled(true);
 		songListView.setOnItemClickListener(this);
-		
+
 		Cursor songCursor = getSongCursor();
-		
-		cursorAdapter = new MyCursorAdapter(
-                        getApplicationContext(),
-                        R.layout.song_row,
-                        songCursor,
-                        new String[]{SongDB.SongTable.COLUMN_TITLE, SongDB.SongTable.COLUMN_COMPOSER},//from
-                        new int[]{R.id.title, R.id.composer});//to)
-		
-		songListView.setAdapter(cursorAdapter); 
+
+		cursorAdapter = new MyCursorAdapter(getApplicationContext(),
+				R.layout.song_row, songCursor, new String[] {
+						SongDB.SongTable.COLUMN_TITLE,
+						SongDB.SongTable.COLUMN_COMPOSER },// from
+				new int[] { R.id.title, R.id.composer });// to)
+
+		songListView.setAdapter(cursorAdapter);
 		songListView.setFastScrollEnabled(true);
+
+		filterEditText = (EditText) findViewById(R.id.filterEditText);
+		filterEditText.addTextChangedListener(this);
 	}
 
 	private Cursor getSongCursor() {
@@ -62,7 +68,7 @@ public class AnstimmAppActivity extends Activity implements OnItemClickListener 
 	protected void onStart() {
 		super.onStart();
 
-		if (cursorAdapter.getCount() == 0){
+		if (cursorAdapter.getCount() == 0) {
 			updateSongs();
 		}
 
@@ -122,7 +128,8 @@ public class AnstimmAppActivity extends Activity implements OnItemClickListener 
 
 	private void startSongActivity(long songId) {
 		Intent intent = new Intent(this, SongActivity.class);
-		intent.putExtra(SongDB.SongTable.TABLE+"."+SongDB.SongTable.COLUMN_ID, songId);
+		intent.putExtra(SongDB.SongTable.TABLE + "."
+				+ SongDB.SongTable.COLUMN_ID, songId);
 		this.startActivity(intent);
 	}
 
@@ -163,5 +170,21 @@ public class AnstimmAppActivity extends Activity implements OnItemClickListener 
 			return alphaIndexer.getSections(); // use the indexer
 		}
 
+	}
+
+	@Override
+	public void afterTextChanged(Editable editable) {
+		String filterString = editable.toString();
+		
+		cursorAdapter.changeCursor(SongDB.getInstance(this).getFilteredSongs(filterString));
+	}
+
+	@Override
+	public void beforeTextChanged(CharSequence arg0, int arg1, int arg2,
+			int arg3) {
+	}
+
+	@Override
+	public void onTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
 	}
 }

@@ -61,7 +61,7 @@ public class SongDB extends SQLiteOpenHelper {
 				COLUMN_SOLO1, COLUMN_SOLO2,
 
 				COLUMN_KEY, COLUMN_GENRE, COLUMN_EDITOR, COLUMN_COMMENT };
-		
+
 	}
 
 	public static SongDB getInstance(Context context) {
@@ -106,6 +106,22 @@ public class SongDB extends SQLiteOpenHelper {
 
 	public Cursor getSong(long id) {
 		return this.getReadableDatabase().query(SongTable.TABLE,
-				SongTable.COLUMNS, SongTable.COLUMN_ID+" = ?", new String[]{""+id}, null, null, null);
+				SongTable.COLUMNS, SongTable.COLUMN_ID + " = ?",
+				new String[] { "" + id }, null, null, null);
+	}
+
+	public Cursor getFilteredSongs(String filterString) {
+		if (filterString == null || filterString.isEmpty()) {
+			return getSongs();
+		}
+
+		return this.getReadableDatabase().query(
+				SongTable.TABLE,
+				SongTable.COLUMNS,
+				SongTable.COLUMN_TITLE + " LIKE ? OR "
+						+ SongTable.COLUMN_COMPOSER + " LIKE ?",
+				new String[] { "%" + filterString + "%",
+						"%" + filterString + "%" }, null, null,
+				SongTable.ORDER_COLUMN);
 	}
 }
