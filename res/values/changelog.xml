@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="versions">
+        <item>1.3.0</item>
         <item>1.2.0</item>
         <item>1.1.2</item>
         <item>1.1.1</item>
@@ -9,10 +10,11 @@
     </string-array>
     
     <string-array name="changes">
+        <item>Feature release: Shaking phone chooses a random song, new Button to clear filter text, "intonate" button in song view plays all tones again. Bugfix: Fixed a bug where list would not be filtered despite non-empty filter text.</item>
         <item>Feature release: Filter for song list</item>
         <item>Bugfix release: Have volume control in song detail activity too, disable voice buttons while playing tones, play tones longer for individual voices.</item>
         <item>Bugfix release: Call release() on MediaPlayer instances after using them.</item>
         <item>Feature release: New song activity that shows details for the song when tapping a song list entry and lets the user push buttons to play back certain voices\' tones again.</item>
-        <item>Inital release: Supports downloading a song csv file, showing a list of songs and playing the intonation for each of them.</item>
+        <item>Initial release: Supports downloading a song csv file, showing a list of songs and playing the intonation for each of them.</item>
     </string-array>
 </resources>
