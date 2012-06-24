@@ -48,7 +48,6 @@ public class AnstimmAppActivity extends Activity implements
 
 		shakeListener = new ShakeListener(this);
 		shakeListener.setOnShakeListener(new ShakeListener.OnShakeListener() {
-
 			public void onShake() {
 				int rand = random.nextInt(songListView.getCount());
 				startSongActivity(cursorAdapter.getItemId(rand));
@@ -94,7 +93,21 @@ public class AnstimmAppActivity extends Activity implements
 		reloadSongList();
 		filterList(filterEditText.getText().toString());
 	}
+	
+	@Override
+	protected void onPause() {
+		super.onPause();
+		
+		shakeListener.pause();
+	}
 
+	@Override
+	protected void onResume() {
+		super.onResume();
+		
+		shakeListener.resume();
+	}
+	
 	private void reloadSongList() {
 		cursorAdapter.changeCursor(getSongCursor());
 	}
