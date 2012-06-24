@@ -42,6 +42,7 @@ public class SongActivity extends Activity implements OnClickListener,
 
 	private VoiceButton[] voiceButtons;
 	private Song selectedSong;
+	private Button intoneButton;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -89,6 +90,9 @@ public class SongActivity extends Activity implements OnClickListener,
 			voiceButton.setOnClickListener(this);
 		}
 
+		intoneButton = (Button) findViewById(R.id.intoneButton);
+		intoneButton.setOnClickListener(this);
+
 		midiPlayer.setOnCompletionListener(this);
 
 		clear();
@@ -120,14 +124,19 @@ public class SongActivity extends Activity implements OnClickListener,
 	protected void onStart() {
 		super.onStart();
 
-		long songId = this.getIntent().getExtras().getLong(
-						SongDB.SongTable.TABLE + "." + SongDB.SongTable.COLUMN_ID);
-		selectedSong = SongDBConverter.getSongFromCursor(SongDB.getInstance(this).getSong(songId));
+		long songId = this
+				.getIntent()
+				.getExtras()
+				.getLong(
+						SongDB.SongTable.TABLE + "."
+								+ SongDB.SongTable.COLUMN_ID);
+		selectedSong = SongDBConverter.getSongFromCursor(SongDB.getInstance(
+				this).getSong(songId));
 		displaySong(selectedSong);
-		play(selectedSong);
+		intone(selectedSong);
 	}
 
-	private void play(Song song) {
+	private void intone(Song song) {
 		midiPlayer.playMidi(song.getIntonation());
 	}
 
@@ -148,6 +157,10 @@ public class SongActivity extends Activity implements OnClickListener,
 			Voice voice = voiceButton.getVoice();
 			String tone = selectedSong.getTone(voice);
 			midiPlayer.playMidi(8, new String[] { tone });
+		} else {
+			if (view == intoneButton) {
+				intone(selectedSong);
+			}
 		}
 	}
 

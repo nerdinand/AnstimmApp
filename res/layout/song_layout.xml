@@ -36,12 +36,12 @@
 
     <com.nerdinand.anstimm.activities.VoiceButton
         android:id="@+id/soprano1Button"
-        android:layout_marginTop="10dip"
         style="?android:attr/buttonStyleSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/arrangementText"
+        android:layout_marginTop="10dip"
         android:text="@string/soprano1" />
 
     <com.nerdinand.anstimm.activities.VoiceButton
@@ -130,5 +130,13 @@
         android:layout_alignBottom="@+id/solo1Button"
         android:layout_toRightOf="@+id/solo1Button"
         android:text="@string/solo2" />
+
+    <Button
+        android:id="@+id/intoneButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/solo1Button"
+        android:text="@string/intone" />
 
 </RelativeLayout>
