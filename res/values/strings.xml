@@ -24,5 +24,7 @@
 	<string name="solo1">Solo 1</string>
 	<string name="solo2">Solo 2</string>
 
-	<string name="ok">OK</string>	
+	<string name="ok">OK</string>
+
+	<string name="clear">Löschen</string>	
 </resources>

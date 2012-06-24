@@ -1,7 +1,8 @@
 package com.nerdinand.anstimm.activities;
 
+import java.util.Random;
+
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.media.AudioManager;
@@ -12,32 +13,47 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.AlphabetIndexer;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.SectionIndexer;
 import android.widget.SimpleCursorAdapter;
 import android.widget.Toast;
 
+import com.hlidskialf.android.hardware.ShakeListener;
 import com.nerdinand.anstimm.R;
 import com.nerdinand.anstimm.db.SongDB;
 import com.nerdinand.anstimm.db.SongDBUpdater;
 import com.nerdinand.anstimm.db.SongDBUpdaterException;
 
-public class AnstimmAppActivity extends Activity implements OnItemClickListener, TextWatcher {
+public class AnstimmAppActivity extends Activity implements
+		OnItemClickListener, TextWatcher, OnClickListener {
 	private ListView songListView;
 	private SongDBUpdater songDBUpdater;
-	private MyCursorAdapter cursorAdapter;
+	private SimpleCursorAdapter cursorAdapter;
 	private EditText filterEditText;
+	private ShakeListener shakeListener;
+	private Button clearButton;
+	private Random random;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main_layout);
+		random = new Random();
 
 		setVolumeControlStream(AudioManager.STREAM_MUSIC);
+
+		shakeListener = new ShakeListener(this);
+		shakeListener.setOnShakeListener(new ShakeListener.OnShakeListener() {
+
+			public void onShake() {
+				int rand = random.nextInt(songListView.getCount());
+				startSongActivity(cursorAdapter.getItemId(rand));
+			}
+		});
 
 		songDBUpdater = new SongDBUpdater(this);
 
@@ -47,7 +63,7 @@ public class AnstimmAppActivity extends Activity implements OnItemClickListener,
 
 		Cursor songCursor = getSongCursor();
 
-		cursorAdapter = new MyCursorAdapter(getApplicationContext(),
+		cursorAdapter = new SimpleCursorAdapter(getApplicationContext(),
 				R.layout.song_row, songCursor, new String[] {
 						SongDB.SongTable.COLUMN_TITLE,
 						SongDB.SongTable.COLUMN_COMPOSER },// from
@@ -58,6 +74,9 @@ public class AnstimmAppActivity extends Activity implements OnItemClickListener,
 
 		filterEditText = (EditText) findViewById(R.id.filterEditText);
 		filterEditText.addTextChangedListener(this);
+
+		clearButton = (Button) findViewById(R.id.clearButton);
+		clearButton.setOnClickListener(this);
 	}
 
 	private Cursor getSongCursor() {
@@ -73,6 +92,7 @@ public class AnstimmAppActivity extends Activity implements OnItemClickListener,
 		}
 
 		reloadSongList();
+		filterList(filterEditText.getText().toString());
 	}
 
 	private void reloadSongList() {
@@ -128,55 +148,26 @@ public class AnstimmAppActivity extends Activity implements OnItemClickListener,
 
 	private void startSongActivity(long songId) {
 		Intent intent = new Intent(this, SongActivity.class);
+
+		// to only have one SongActivity on the top of the stack, so pressing
+		// back button will always open AnstimmAppActivity again
+		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
 		intent.putExtra(SongDB.SongTable.TABLE + "."
 				+ SongDB.SongTable.COLUMN_ID, songId);
 		this.startActivity(intent);
 	}
 
-	class MyCursorAdapter extends SimpleCursorAdapter implements SectionIndexer {
-
-		AlphabetIndexer alphaIndexer;
-
-		public MyCursorAdapter(Context context, int layout, Cursor cursor,
-				String[] from, int[] to) {
-
-			super(context, layout, cursor, from, to);
-			alphaIndexer = new AlphabetIndexer(cursor,
-					cursor.getColumnIndex(SongDB.SongTable.COLUMN_TITLE),
-					" ABCDEFGHIJKLMNOPQRSTUVWXYZ");
-
-			// you have just to instanciate the indexer class like this
-
-			// cursor,index of the sorted colum,a string representing the
-			// alphabeth (pay attention on the blank char at the beginning of
-			// the sequence)
-
-		}
-
-		@Override
-		public int getPositionForSection(int section) {
-			return alphaIndexer.getPositionForSection(section); // use the
-																// indexer
-		}
-
-		@Override
-		public int getSectionForPosition(int position) {
-			return alphaIndexer.getSectionForPosition(position); // use the
-																	// indexer
-		}
-
-		@Override
-		public Object[] getSections() {
-			return alphaIndexer.getSections(); // use the indexer
-		}
-
-	}
-
 	@Override
 	public void afterTextChanged(Editable editable) {
 		String filterString = editable.toString();
-		
-		cursorAdapter.changeCursor(SongDB.getInstance(this).getFilteredSongs(filterString));
+
+		filterList(filterString);
+	}
+
+	private void filterList(String filterString) {
+		cursorAdapter.changeCursor(SongDB.getInstance(this).getFilteredSongs(
+				filterString));
 	}
 
 	@Override
@@ -186,5 +177,12 @@ public class AnstimmAppActivity extends Activity implements OnItemClickListener,
 
 	@Override
 	public void onTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
+	}
+
+	@Override
+	public void onClick(View view) {
+		if (view == clearButton) {
+			filterEditText.setText("");
+		}
 	}
 }
