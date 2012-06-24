@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -7,50 +7,48 @@
     tools:ignore="HardcodedText" >
 
     <TextView
-        android:id="@+id/textView1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/app_name"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <TextView
-        android:id="@+id/TextView01"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:text="© 2012 Ferdinand Niedermann"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
-
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/textView1"
         android:layout_marginTop="19dp"
         android:text="Hacked together by nerdinand, based on an idea by Martin Spielmann."
         android:textAppearance="?android:attr/textAppearanceSmall" />
 
     <TextView
-        android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_marginTop="88dp"
-        android:text="Incorporates code from OpenCSV, released under the Apache 2.0 licence (opencsv.sourceforge.net)"
+        android:text="Incorporates code from"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="OpenCSV, released under the Apache 2.0 licence (opencsv.sourceforge.net)"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="and Android Shake Detection Listener released under the Apache 2.0 licence (http://android.hlidskialf.com/blog/code/android-shake-detection-listener)"
         android:textAppearance="?android:attr/textAppearanceSmall" />
 
     <ListView
         android:id="@+id/changeLogListView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/TextView01"
-        android:layout_alignParentRight="true"
-        android:layout_below="@+id/textView2" 
-        >
-        <!-- Preview: listitem=@android:layout/simple_list_item_2 -->
-
+        android:layout_height="0dp"
+        android:layout_weight="0.48" >
     </ListView>
 
-</RelativeLayout>
+    <TextView
+        android:id="@+id/TextView01"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="© 2012 Ferdinand Niedermann"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+
+</LinearLayout>
